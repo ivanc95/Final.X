@@ -62,6 +62,7 @@ typedef enum RS_enum {
 volatile unsigned int val_1=0;
 volatile unsigned int val_2=0;
 volatile unsigned int val_3=0;
+volatile double t = 1.9;
 
 volatile stateType state = idle;
 
@@ -113,14 +114,18 @@ int main(void)
         if(IFS0bits.AD1IF ==1) {
             
             
+            AD1CON1bits.ADON = 1;
+            
             val_1 = ADC1BUF0; //get value from left sensor
             val_2 = ADC1BUF2; //get value from middle sensor
             val_3 = ADC1BUF4; //get value from right sensor
 
+            AD1CON1bits.ADON = 0;
+            
             analog_1=(3.3*val_1)/1023; //Left sensor
             analog_2=(3.3*val_2)/1023; //Middle Sensor
             analog_3=(3.3*val_3)/1023; //Right Sensor
-            //analog_1=analog_1+0.25;
+            analog_1=analog_1+0.36;
             
             sprintf(buf_1, "%1.2f  ", analog_1);
             sprintf(buf_2, "%1.2f  ", analog_2);
@@ -153,34 +158,34 @@ int main(void)
                     break;
                 case(forward):
                     
-                    if(analog_2 > 2 && analog_1 < 2 && analog_3 < 2) // Going forward, middle sensor on 
+                    if(analog_2 > t && analog_1 < t && analog_3 < t) // Going forward, middle sensor on 
                     {
                         OC2RS=750;
                         OC4RS=800;
                     }
-                    else if(analog_2 < 2 && analog_1 < 2 && analog_3 < 2) // No sensors activated, move forward
+                    else if(analog_2 < t && analog_1 < t && analog_3 < t) // No sensors activated, move forward
                     {
                         OC2RS=750;
                         OC4RS=800;
                     }
-                    else if(analog_2 > 2 && analog_1 > 2 && analog_3 < 2) // Sensor 1 and 2 on, turn left
+                    else if(analog_2 > t && analog_1 > t && analog_3 < t) // Sensor 1 and 2 on, turn left
                     {
                         OC2RS=950;
                         OC4RS=650;
                         delayMs(10);
                     }
-                    else if(analog_2 > 2 && analog_1 < 2 && analog_3 > 2) // Sensor 2 and 3 on, turn right
+                    else if(analog_2 > t && analog_1 < t && analog_3 > t) // Sensor 2 and 3 on, turn right
                     {
                         OC2RS=650;
                         OC4RS=950;
                         delayMs(10);
                     }
-                    else if(analog_2 > 2 && analog_1 > 2 && analog_3 > 2) // All sensors on, go forward
+                    else if(analog_2 > t && analog_1 > t && analog_3 > t) // All sensors on, go forward
                     {
                         OC2RS=750;
                         OC4RS=750;  
                     }
-                    else if(analog_2 < 2 && analog_1 > 2 && analog_3 < 2) // Only sensor 1 on, turn left hard
+                    else if(analog_2 < t && analog_1 > t && analog_3 < t) // Only sensor 1 on, turn left hard
                     {
                         OC2RS=950;
                         OC4RS=650;
@@ -218,11 +223,29 @@ int main(void)
 }
 
 
-int LEDState(){
-    int x = 0;
-    
-    
-    
-    return x;
-}
+//int LEDState(){
+//    int x = -1;
+//    
+//     double v1 = ADC1BUF0; //get value from left sensor
+//     double v2 = ADC1BUF2; //get value from middle sensor
+//     double v3 = ADC1BUF4; //get value from right sensor
+//
+//     double an1=(3.3*val_1)/1023; //Left sensor
+//     double an2=(3.3*val_2)/1023; //Middle Sensor
+//     double an3=(3.3*val_3)/1023; //Right Sensor
+//     
+//     an3 = an3 + 0.36 //Offset for Left sensor
+//     
+//     if(an1 < 1.85 && an2 > 1.85 && an3 < 1.85){
+//         return 0;
+//     }
+//     else if(an1 < 1.85 && an2 < 1.85 && an3 < 1.85 ){
+//         
+//     }
+//     else if(an1 < 1.85 && an2 < 1.85 && an3 < 1.85){
+//         
+//     }
+//    
+//    return x;
+//}
 

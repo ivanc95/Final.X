@@ -33,3 +33,5 @@ void initADC_1(){
     AD1CON1bits.ADON = 1; // turn on the ADC
 }
 
+
+
